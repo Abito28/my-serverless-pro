@@ -75,3 +75,36 @@ resource "aws_iam_role_policy" "delete_dynamo" {
     ]
   })
 }
+
+resource "aws_iam_role" "update_dynamo" {
+    name = "dynamo-update"
+    description = "Allows Lambda functions to call AWS services on your behalf."
+
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+      {
+        Effect    = "Allow"
+        Principal = { Service = "lambda.amazonaws.com" }
+        Action    = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "update_dynamo" {
+  name = "dynamo-updatePolicy"
+  role = aws_iam_role.update_dynamo.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "Statement1"
+        Effect   = "Allow"
+        Action   = "dynamodb:UpdateItem"
+        Resource = "arn:aws:dynamodb:*:${data.aws_caller_identity.current.account_id}:table/*"
+      }
+    ]
+  })
+}
