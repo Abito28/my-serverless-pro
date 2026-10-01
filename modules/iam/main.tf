@@ -108,3 +108,44 @@ resource "aws_iam_role_policy" "update_dynamo" {
     ]
   })
 }
+
+resource "aws_iam_role" "my_memo_lam" {
+  name = "my_memo_Lam-role-5j7ewx4q"   
+  path = "/service-role/"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = { Service = "lambda.amazonaws.com" }
+        Action    = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "dynamo_for_lambda" {
+  name = "dynamo-for-lambda"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+            "dynamodb:GetItem",
+            "dynamodb:Scan",
+            "dynamodb:Query"
+            ],
+            "Resource": "arn:aws:dynamodb:*:${data.aws_caller_identity.current.account_id}:table/memos"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "my_memo_lam" {
+  role       = aws_iam_role.my_memo_lam.name
+  policy_arn = aws_iam_policy.dynamo_for_lambda.arn
+}
