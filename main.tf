@@ -13,4 +13,7 @@ module "lambda" {
 module "api" {
   source              = "./modules/api"
   get_memo_lambda_arn = module.lambda.get_memo_arn
+  create_memo_lambda_arn = module.lambda.create_memo_arn
+  update_memo_lambda_arn = module.lambda.update_memo_arn
+  delete_memo_lambda_arn = module.lambda.delete_memo_arn
 }
