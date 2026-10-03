@@ -9,3 +9,8 @@ module "lambda" {
   create_role_arn = module.iam.create_dynamo_role_arn
   update_role_arn = module.iam.update_dynamo_role_arn
 }
+
+module "api" {
+  source              = "./modules/api"
+  get_memo_lambda_arn = module.lambda.get_memo_arn
+}
