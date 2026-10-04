@@ -17,3 +17,7 @@ module "api" {
   update_memo_lambda_arn = module.lambda.update_memo_arn
   delete_memo_lambda_arn = module.lambda.delete_memo_arn
 }
+
+module "db" {
+  source = "./modules/db"
+}
